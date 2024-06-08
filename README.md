@@ -1,4 +1,4 @@
-# docker
+# Kubero docker images
 Centralized build of dockerimages used by Kubero
 
 Images: 
