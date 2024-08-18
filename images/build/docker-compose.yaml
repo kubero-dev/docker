@@ -12,4 +12,4 @@ services:
     environment:
       - NIXPACKS_DEBIAN=true
     volumes:
-      - ../../data:/app
+      - ../../data/app:/app
