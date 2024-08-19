@@ -7,9 +7,24 @@ set -e
 #ssh-add /root/.ssh/*
 #ssh-keyscan github.com >>~/.ssh/known_hosts
 
+if [ -z "$GIT_REPOSITORY" ]; then
+    echo "GIT_REPOSITORY is not set"
+    exit 1
+fi
+
+## if GIT_BRANCH is set use it as GIT_REF
+if [ -z "$GIT_REF" ]; then
+    if [ -z "$GIT_BRANCH" ]; then
+        echo "GIT_REF is not set"
+        exit 1
+    else
+        GIT_REF=$GIT_BRANCH
+    fi
+fi
+
 echo "========== debug"
 echo "GIT_REPOSITORY: $GIT_REPOSITORY"
-echo "GIT_BRANCH: $GIT_BRANCH"
+echo "GIT_REF: $GIT_REF"
 echo "KUBERO_BUILDPACK_DEFAULT_BUILD_CMD: $KUBERO_BUILDPACK_DEFAULT_BUILD_CMD"
 echo "KUBERO_BUILDPACK_DEFAULT_RUN_CMD: $KUBERO_BUILDPACK_DEFAULT_RUN_CMD"
 echo "User:" `whoami`
@@ -35,7 +50,7 @@ echo "========== Clone Repository from $GIT_REPOSITORY"
 cd /app
 git config --global --add safe.directory /app #Mark git directory as safe
 git clone --recurse-submodules $GIT_REPOSITORY .
-git checkout $GIT_BRANCH
+git checkout $GIT_REF
 #git log -n1 --pretty=format:'export REF_NAMES="%D"%nexport COMMIT=%H%nexport AUTHOR=%an%nexport AUTHOR_EMAIL=%ae%nexport DATE="%ad"%nexport SUBJECT="%s"%nexport BODY="%b"%n' > kubero_commit.env
 
 rm -rf .git
